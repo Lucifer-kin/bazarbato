@@ -13,7 +13,6 @@ export default function PaymentSuccessPage({
     dispatch(removeOrder());
   }, [dispatch]);
 
-  console.log("order from payment success page", order);
   return (
     <div>
       <h1>Payment Success</h1>

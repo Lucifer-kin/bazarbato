@@ -1,19 +1,25 @@
 "use client";
 
+// core react packages
 import Link from "next/link";
+import { useState } from "react";
 
+// css files
 import styles from "./page.module.css";
 import formStyles from "@/public/styles/form.module.css";
+
+// custom components
 import Card from "@/components/Card/Card";
-import CheckBox from "@/components/CheckBox/CheckBox";
-import { useState } from "react";
-import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
-import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 import Modal from "@/components/_admin/Modal/Modal";
-import { formatDate } from "@/helpers/utils";
+import CheckBox from "@/components/CheckBox/CheckBox";
+import TableFoot from "@/components/_admin/TableFoot/TableFoot";
+
+// redux
 import { useDispatch } from "react-redux";
 import { resetError, setError } from "@/app/reducers/utils";
-import TableFoot from "@/components/_admin/TableFoot/TableFoot";
+
+// helper functions
+import { formatDate } from "@/helpers/utils";
 
 export default function CouponClientComponent({
   coupons: propCoupons,

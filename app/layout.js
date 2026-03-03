@@ -5,7 +5,7 @@ import { getUser, setUser } from "@/helpers/auth";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Premps",
+  title: "Bazar Bato",
 };
 
 export default async function RootLayout({ children }) {

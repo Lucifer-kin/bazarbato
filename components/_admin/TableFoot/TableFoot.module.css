@@ -1,49 +1,47 @@
-
 .tableFoot {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .tableFoot tr {
-    border: none;
-    position: relative;
-  }
-  .tableFoot td {
-    font-size: 0.8rem;
-  }
-  .product_per_page input {
-    width: 3rem;
-    text-align: center;
-    margin: 0.5rem 0.5rem 0;
-    display: inline-block !important;
-  }
-  .pagination {
-    top: 0.5rem;
-    right: 1rem;
-    position: absolute;
-  }
-  .pagination button {
-    width: 2.3rem;
-    height: 2.3rem;
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 5px;
-    text-align: center;
-    margin-left: 0.5rem;
-    color: var(--border);
-    vertical-align: middle;
-    background-color: #fff;
-    border: 1px solid var(--divider);
-  }
-  .pagination input {
-    margin: 0;
-    padding: 0;
-    width: 3rem;
-    text-align: center;
-    margin-left: 0.5rem;
-    vertical-align: middle;
-    display: inline-block !important;
-  }
-  .pagination span {
-    margin-left: 0.5rem;
-  }
-  
+  width: 100%;
+  border-collapse: collapse;
+}
+.tableFoot tr {
+  border: none;
+  position: relative;
+}
+.tableFoot td {
+  font-size: 0.8rem;
+}
+.product_per_page input {
+  width: 3rem;
+  text-align: center;
+  margin: 0.5rem 0.5rem 0;
+  display: inline-block !important;
+}
+.pagination {
+  top: 0.5rem;
+  right: 1rem;
+  position: absolute;
+}
+.pagination button {
+  width: 2.3rem;
+  height: 2.3rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+  margin-left: 0.5rem;
+  color: var(--border);
+  vertical-align: middle;
+  background-color: #fff;
+  border: 1px solid var(--divider);
+}
+.pagination input {
+  margin: 0;
+  padding: 0;
+  width: 3rem;
+  text-align: center;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  display: inline-block !important;
+}
+.pagination span {
+  margin-left: 0.5rem;
+}

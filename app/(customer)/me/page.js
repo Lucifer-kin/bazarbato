@@ -15,7 +15,7 @@ import { getUser, logoutUser } from "@/helpers/auth";
 import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: "My Profile | Premps",
+  title: "My Profile | Bazaar Bato",
 };
 
 export default async function ProfilePage() {

@@ -77,3 +77,8 @@ body {
     text-wrap: balance;
   }
 }
+
+/* RESUED STYLES */
+.homepadding {
+  padding: 2rem 10rem;
+}

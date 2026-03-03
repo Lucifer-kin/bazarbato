@@ -87,7 +87,7 @@ async function handleSubmit(formData) {
             banner,
             `category/${existingCategory.url_key}/${banner.name}`
           ),
-          deleteFile(category.banner),
+          // deleteFile(category.banner),
         ]);
         const responseOfBannerUpload = response[0];
         bannerUrl = responseOfBannerUpload.url;

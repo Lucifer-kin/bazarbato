@@ -1,4 +1,6 @@
 .homepadding {
   display: block;
+  color: inherit;
   padding: 2rem 10rem;
+  margin: auto;
 }

@@ -7,10 +7,9 @@ import Header from "@/components/_customer/Header/Header";
 import "./global.css";
 
 import { Fragment } from "react";
-import { getUser } from "@/helpers/auth";
 
 export const metadata = {
-  title: "Home | Premps",
+  title: "Home | Bazar Bato",
 };
 
 export default async function RootLayout({ children }) {

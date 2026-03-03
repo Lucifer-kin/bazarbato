@@ -11,7 +11,7 @@ import {
   IoSearchOutline,
 } from "react-icons/io5";
 
-import logo from "@/public/images/logo/logo.png";
+import logo from "@/public/images/logo.png";
 import logoIcon from "@/public/images/icon.png";
 
 import styles from "./Header.module.css";
@@ -34,14 +34,14 @@ export default function Header() {
         <Image
           className={styles.logo}
           src={logo}
-          alt="Premps"
+          alt="Bazar bato"
           width={150}
           height={50}
         />
         <Image
           className={styles.logoIcon}
           src={logoIcon}
-          alt="Premps"
+          alt="Bazar bato"
           width={45}
         />
       </Link>
