@@ -47,9 +47,8 @@ export default function TableFoot({
   };
 
   return (
-    <tfoot className={styles.tableFoot}>
-      <tr>
-        <td colSpan={2} className={styles.product_per_page}>
+    <div className={styles.tableFoot}>
+        <div className={styles.product_per_page}>
           Show
           <input
             className={formStyles.input}
@@ -58,8 +57,9 @@ export default function TableFoot({
             onChange={(e) => setItemsPerPage(e.target.value)}
           />
           per page
-        </td>
-        <td colSpan={4} className={styles.pagination}>
+        </div>
+
+        <div className={styles.pagination}>
           <button className={styles.first} onClick={() => setPage(1)}>
             <AiOutlineDoubleLeft />
           </button>
@@ -83,8 +83,7 @@ export default function TableFoot({
             <AiOutlineDoubleRight />
           </button>
           <span>{total} records</span>
-        </td>
-      </tr>
-    </tfoot>
+        </div>
+    </div>
   );
 }

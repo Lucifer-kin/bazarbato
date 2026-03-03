@@ -97,9 +97,8 @@ export default async function Orders({
               </tr>
             ))}
           </tbody>
-
-          <TableFoot total={totalCount} />
         </table>
+        <TableFoot total={totalCount} />
       </Card>
     </div>
   );

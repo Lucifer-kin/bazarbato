@@ -54,10 +54,10 @@ export default function CouponClientComponent({
             title: "Success",
             message: "Coupons deleted successfully",
             status: true,
-          })
+          }),
         );
         setCoupons((prev) =>
-          prev.filter((coupon) => !selectedCoupons.includes(coupon._id))
+          prev.filter((coupon) => !selectedCoupons.includes(coupon._id)),
         );
         setSelectedCoupon([]);
       }
@@ -81,7 +81,7 @@ export default function CouponClientComponent({
             title: "Success",
             message: "Coupons disabled successfully",
             status: true,
-          })
+          }),
         );
         setCoupons((prev) =>
           prev.map((coupon) => {
@@ -89,7 +89,7 @@ export default function CouponClientComponent({
               return { ...coupon, isActive: false };
             }
             return coupon;
-          })
+          }),
         );
         setSelectedCoupon([]);
       }
@@ -206,9 +206,8 @@ export default function CouponClientComponent({
                 </tr>
               ))}
           </tbody>
-
-          <TableFoot total={couponsCount} />
         </table>
+        <TableFoot total={couponsCount} />
       </Card>
     </div>
   );

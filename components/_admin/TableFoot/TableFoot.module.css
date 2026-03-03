@@ -1,12 +1,7 @@
 .tableFoot {
-  width: 100%;
-  border-collapse: collapse;
-}
-.tableFoot tr {
-  border: none;
-  position: relative;
-}
-.tableFoot td {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
   font-size: 0.8rem;
 }
 .product_per_page input {
@@ -16,9 +11,12 @@
   display: inline-block !important;
 }
 .pagination {
-  top: 0.5rem;
-  right: 1rem;
-  position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
 }
 .pagination button {
   width: 2.3rem;

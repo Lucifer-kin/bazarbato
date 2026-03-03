@@ -197,8 +197,8 @@ export default function ProductTable({
               ))}
           </tbody>
 
-          <TableFoot total={productsCount} />
         </table>
+        <TableFoot total={productsCount} />
       </Card>
     </Fragment>
   );

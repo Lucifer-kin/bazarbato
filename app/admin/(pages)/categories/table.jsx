@@ -166,8 +166,8 @@ export default function CategoryTable({
               </tr>
             ))}
           </tbody>
-          <TableFoot total={totalCount} />
         </table>
+        <TableFoot total={totalCount} />
       </Card>
     </Fragment>
   );

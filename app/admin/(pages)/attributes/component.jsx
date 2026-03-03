@@ -154,8 +154,8 @@ export default function AttributesClientPage({
                 </tr>
               ))}
           </tbody>
-          <TableFoot total={attributesCount} />
         </table>
+        <TableFoot total={attributesCount} />
       </Card>
     </div>
   );
