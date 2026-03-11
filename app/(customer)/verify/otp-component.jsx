@@ -30,29 +30,30 @@ export default function OTP_Component({ email, resendOtp, verifyOTP }) {
   }, []);
 
   useEffect(() => {
+    // created a function because useEffect payload function cannot be async
+    // If I create function outside of useEffect, it will cause circular dependency
+    async function submitOtp(otpString) {
+      setSubmitting(true);
+      try {
+        const response = await verifyOTP({ otp: otpString });
+        if (response.error) {
+          return setError(response.error);
+        }
+        // if response is ok, redirect to home page
+        // cookies are already set by verifyOTP function
+        router.push("/me");
+      } catch (error) {
+        setError("Something went wrong. Please reload the page and try again.");
+      } finally {
+        setSubmitting(false);
+        setOtp(INITIAL_OTP);
+      }
+    }
     const otpString = otp.join("");
     if (otpString.length === 6) {
       submitOtp(otpString);
     }
-  }, [otp]);
-
-  async function submitOtp(otpString) {
-    setSubmitting(true);
-    try {
-      const response = await verifyOTP({ otp: otpString });
-      if (response.error) {
-        return setError(response.error);
-      }
-      // if response is ok, redirect to home page
-      // cookies are already set by verifyOTP function
-      router.push("/me");
-    } catch (error) {
-      setError("Something went wrong. Please reload the page and try again.");
-    } finally {
-      setSubmitting(false);
-      setOtp(INITIAL_OTP);
-    }
-  }
+  }, [otp, setSubmitting, setOtp, setError, router, verifyOTP]);
 
   const inputChangeHandler = (val = "", index) => {
     if (isNaN(val)) {

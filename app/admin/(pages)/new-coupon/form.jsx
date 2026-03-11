@@ -153,7 +153,7 @@ export default function NewCouponForm({
     }, 1000);
 
     return () => clearTimeout(timerID);
-  }, [couponCode, coupon]);
+  }, [couponCode, coupon, checkIfCouponExists]);
 
   // function to handle change in coupon code
   const handleCouponCodeChange = (e) => {

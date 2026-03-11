@@ -151,7 +151,7 @@ export default function NewProductForm({
         }
       });
     }
-  }, [product, setImages]);
+  }, [product, setImages, images]);
 
   // setting the image in the images array using useState hook
   const imageChangeHandler = (file, index) => {

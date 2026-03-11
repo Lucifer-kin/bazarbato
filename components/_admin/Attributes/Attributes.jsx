@@ -27,7 +27,7 @@ export default function Attributes({ attributeSets, defaultSet, attributes }) {
 
   // set one current set out of all attribute sets on initial render and value of each attribute
   useEffect(() => {
-    const set = getAttributesOfSet(defaultSet);
+    const set = attributeSets.find((item) => item._id === defaultSet) ?? DEFAULT_SET;
     if (attributes && attributes.length) {
       set.attributes.forEach((attribute) => {
         const { code } = attribute;
@@ -38,7 +38,7 @@ export default function Attributes({ attributeSets, defaultSet, attributes }) {
       });
     }
     setCurrentSet(set);
-  }, [attributes, defaultSet]);
+  }, [attributes, defaultSet, attributeSets]);
 
   // function to handle select change
   const selectChangeHandler = (e) => {

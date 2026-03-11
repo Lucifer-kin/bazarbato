@@ -117,11 +117,12 @@ export async function uploadFile(file, filename) {
 
 // delete images form vercel blob
 export async function deleteFile(filename) {
-  try {
-    return del(filename);
-  } catch (error) {
-    // throw new Error("Error while deleting file ->" + filename);
-  }
+  return Promise.resolve();
+  // try {
+  //   // return del(filename);
+  // } catch (error) {
+  //   // throw new Error("Error while deleting file ->" + filename);
+  // }
 }
 
 export async function checkExistence(filter, model) {
