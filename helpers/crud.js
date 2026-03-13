@@ -79,11 +79,12 @@ export async function uploadFile(file, filename) {
     };
     await s3.upload(params).promise();
     const imageUrl = process.env.DO_SPACES_URL + newFilename;
+    console.log("File uploaded successfully ->", imageUrl);
     return { url: imageUrl };
     // return Promise.resolve({ url: data.Location });
   } catch (error) {
-    console.log("Error while uploading file ->", error.message);
-    throw new Error("Error while uploading file ->" + filename);
+    console.log("Error while uploading file " + filename + " ->", error);
+    throw new Error("Error while uploading file " + filename + " ->", error);
   }
 }
 
@@ -99,10 +100,12 @@ export async function deleteFile(filename = "") {
       Bucket: process.env.DO_SPACES_BUCKET,
       Key: filename.replace(process.env.DO_SPACES_URL, ""),
     };
+    console.log("Deleting file ->", filename);
     const response = await s3.deleteObject(params).promise();
+    console.log("File deleted successfully ->", filename);
   } catch (error) {
-    console.log(error);
-    throw new Error("Error while deleting file ->" + filename);
+    console.log("Error while deleting file " + filename + " ->", error);
+    throw new Error("Error while deleting file " + filename + " ->", error);
   }
 }
 
