@@ -36,9 +36,10 @@ async function imageUpdateHandler(images, existingImages, slug = "") {
       const filename = `products/${slug}/${image.name}`;
       console.log("uploading", filename);
       response.push(uploadFile(image, filename));
+      console.log("uploaded", filename);
     }
-    const deletionResponse = [];
     const imageNames = (await Promise.all(response)).map((image) => image.url);
+    const deletionResponse = [];
     for (let image of existingImages) {
       if (imageNames.includes(image)) continue;
       deletionResponse.push(deleteFile(image));
@@ -74,6 +75,7 @@ async function formSubmitHandler(formData) {
   try {
     await dbConnect();
   } catch (error) {
+    console.log("Error connecting to database", error);
     return { error: "Error connecting to database" };
   }
   // extracting input field values
@@ -187,7 +189,7 @@ async function formSubmitHandler(formData) {
     await product.save();
     return true;
   } catch (error) {
-    console.log(error);
+    console.log("Error from here", error.message);
     return false;
   }
 }
@@ -225,7 +227,8 @@ async function getCategories() {
       isParent: false,
     }).select("name code");
     return deepCopy(categories);
-  } catch {
+  } catch(error) {
+    console.error("Error fetching categories:", error);
     return [];
   }
 }
@@ -239,7 +242,8 @@ async function getProduct(url_key) {
       "name code"
     );
     return product;
-  } catch {
+  } catch(error) {
+    console.error("Error fetching product:", error);
     return null;
   }
 }

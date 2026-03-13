@@ -8,8 +8,6 @@ const nextConfig = {
         pathname: "**",
       },
     ],
-    unoptimized: false,
-    domains: ['via.placeholder.com', 'placehold.co', 'dummyimage.com'],
   },
 };
 

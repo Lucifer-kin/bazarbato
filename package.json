@@ -6,9 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:clean": "node scripts/clean-database.mjs",
+    "fashion:generate": "node scripts/generate-fashion-catalog.mjs",
+    "fashion:seed": "node scripts/seed-fashion.mjs",
+    "images:generate:ai": "node scripts/generate-ai-images.mjs",
+    "images:upload": "node scripts/upload-reviewed-images.mjs",
+    "products:import": "node scripts/import-product-images.mjs",
+    "catalog:import": "node scripts/import-fashion-csv.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1008.0",
     "@canvasjs/charts": "^3.8.12",
     "@canvasjs/react-charts": "^1.0.2",
     "@reduxjs/toolkit": "^2.2.6",
@@ -18,7 +26,7 @@
     "brcypt": "^1.0.1",
     "crypto": "^1.0.1",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.8.0",
+    "mongodb": "^6.21.0",
     "mongoose": "^8.5.1",
     "next": "14.2.4",
     "nodemailer": "^6.9.15",
@@ -29,11 +37,12 @@
     "react-icons": "^5.2.1",
     "react-minimal-pie-chart": "^8.4.0",
     "react-redux": "^9.1.2",
-    "react-toastify": "^10.0.5",
-    "sharp": "^0.33.4"
+    "react-toastify": "^10.0.5"
   },
   "devDependencies": {
+    "canvas": "^3.2.1",
     "eslint": "^8",
-    "eslint-config-next": "14.2.4"
+    "eslint-config-next": "14.2.4",
+    "sharp": "^0.34.5"
   }
 }

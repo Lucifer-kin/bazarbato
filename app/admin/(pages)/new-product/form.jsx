@@ -71,8 +71,8 @@ function reducer(state, action) {
       error.message = isNaN(payload)
         ? "Price must be a number"
         : payload <= 0
-        ? VALIDATION_ERRORS.price.message
-        : "";
+          ? VALIDATION_ERRORS.price.message
+          : "";
       return { ...state, price: error };
     case "CATEGORY":
       error.message =
@@ -81,7 +81,9 @@ function reducer(state, action) {
           : "";
       return { ...state, category: error };
     case "DESCRIPTION":
-      error.message = !payload.length ? VALIDATION_ERRORS.description.message : "";
+      error.message = !payload.length
+        ? VALIDATION_ERRORS.description.message
+        : "";
       return { ...state, description: error };
     case "IMAGE":
       // counting the number of images
@@ -92,8 +94,8 @@ function reducer(state, action) {
       error.message = isNaN(payload)
         ? "Quantity must be a number"
         : payload < 0
-        ? VALIDATION_ERRORS.qty.message
-        : "";
+          ? VALIDATION_ERRORS.qty.message
+          : "";
       return { ...state, qty: error };
     case "URL-KEY":
       error.message = payload;
@@ -122,6 +124,17 @@ function reducer(state, action) {
   }
 }
 
+// handle initial image loading
+function handleInitialImageLoading(existingImages) {
+  const newImages = [null, null, null, null, null];
+  if (existingImages && Array.isArray(existingImages)) {
+    for (let i = 0; i < 5; i++) {
+      newImages[i] = existingImages[i] || null;
+    }
+  }
+  return newImages;
+}
+
 // rendering the form
 export default function NewProductForm({
   attributeSets,
@@ -134,24 +147,17 @@ export default function NewProductForm({
   const [errors, dispatch] = useReducer(reducer, VALIDATION_ERRORS);
   const [responseError, setResponseError] = useState("");
   const [sku, setSku] = useState(product ? product.sku : "");
-  const [images, setImages] = useState(new Array(5).fill(null));
   const [loading, setLoading] = useState(false);
 
+  const [images, setImages] = useState(
+    handleInitialImageLoading(product.images),
+  );
   // if the form is in edit mode, then set the errors to null initially
   useEffect(() => {
     if (product) {
       dispatch({ type: "SET_ERRORS", payload: NULL_ERRORS });
-      images.forEach((_, index) => {
-        if (product.images[index]) {
-          setImages((prevImages) => {
-            const newImages = [...prevImages];
-            newImages[index] = product.images[index];
-            return newImages;
-          });
-        }
-      });
     }
-  }, [product, setImages, images]);
+  }, [product]);
 
   // setting the image in the images array using useState hook
   const imageChangeHandler = (file, index) => {
@@ -219,13 +225,13 @@ export default function NewProductForm({
         } else {
           setLoading(false);
           setResponseError(
-            "Server Error, Couldnot save the product. Try refreshing the page"
+            "Server Error, Couldnot save the product. Try refreshing the page",
           );
         }
       } catch (error) {
         setLoading(false);
         setResponseError(
-          "Server Error, Couldnot save the product. Try refreshing the page"
+          "Server Error, Couldnot save the product. Try refreshing the page",
         );
         setSku("");
       }

@@ -4,8 +4,8 @@
 // import fs from "fs/promises";
 
 // third party libraries
-import { put, del } from "@vercel/blob";
-// import AWS from "aws-sdk";
+// import { put, del } from "@vercel/blob";
+import AWS from "aws-sdk";
 
 // function to create database connection
 import dbConnect from "./dbConnect";
@@ -56,74 +56,76 @@ import DiscountCoupon from "@/models/DiscountCoupon";
 // }
 
 // upload images to digital ocean space object storage using aws s3 bucket
-// export async function uploadFile(file, filename) {
-//   const arrayBuffer = await file.arrayBuffer();
-
-//   // add timestamp to filename to make it unique
-//   const filenameArray = filename.split("/");
-//   const lastItem = filenameArray.pop();
-//   filenameArray.push(Date.now() + "-" + lastItem);
-//   const newFilename = filenameArray.join("/");
-
-//   try {
-//     const s3 = new AWS.S3({
-//       endpoint: process.env.DO_SPACES_ENDPOINT,
-//       accessKeyId: process.env.DO_SPACES_KEY,
-//       secretAccessKey: process.env.DO_SPACES_SECRET,
-//     });
-//     const params = {
-//       Bucket: process.env.DO_SPACES_BUCKET,
-//       Key: "premps/" + newFilename,
-//       Body: Buffer.from(arrayBuffer),
-//       ACL: "public-read",
-//     };
-//     const data = await s3.upload(params).promise();
-//     return Promise.resolve({ url: data.Location });
-//   } catch (error) {
-//     console.log("Error while uploading file ->", error.message);
-//     throw new Error("Error while uploading file ->" + filename);
-//   }
-// }
-
-// // delete images from digital ocean space object storage
-// export async function deleteFile(filename = "") {
-//   try {
-//     const s3 = new AWS.S3({
-//       endpoint: process.env.DO_SPACES_ENDPOINT,
-//       accessKeyId: process.env.DO_SPACES_KEY,
-//       secretAccessKey: process.env.DO_SPACES_SECRET,
-//     });
-//     const params = {
-//       Bucket: process.env.DO_SPACES_BUCKET,
-//       Key: filename.replace(process.env.DO_SPACES_URL, ""),
-//     };
-//     const response = await s3.deleteObject(params).promise();
-//   } catch (error) {
-//     console.log(error);
-//     throw new Error("Error while deleting file ->" + filename);
-//   }
-// }
-
-// upload images using vercel blob
 export async function uploadFile(file, filename) {
+  const arrayBuffer = await file.arrayBuffer();
+
+  // add timestamp to filename to make it unique
+  const filenameArray = filename.split("/");
+  const lastItem = filenameArray.pop();
+  filenameArray.push(Date.now() + "-" + lastItem);
+  const newFilename = filenameArray.join("/");
+
   try {
-    return put(filename, file, {
-      access: "public",
+    const s3 = new AWS.S3({
+      endpoint: process.env.DO_SPACES_ENDPOINT,
+      accessKeyId: process.env.DO_SPACES_KEY,
+      secretAccessKey: process.env.DO_SPACES_SECRET,
+      signatureVersion: "v4",
     });
+    const params = {
+      Bucket: process.env.DO_SPACES_BUCKET,
+      Key: newFilename,
+      Body: Buffer.from(arrayBuffer),
+    };
+    await s3.upload(params).promise();
+    const imageUrl = process.env.DO_SPACES_URL + newFilename;
+    return { url: imageUrl };
+    // return Promise.resolve({ url: data.Location });
   } catch (error) {
+    console.log("Error while uploading file ->", error.message);
     throw new Error("Error while uploading file ->" + filename);
   }
 }
 
-// delete images form vercel blob
-export async function deleteFile(filename) {
-  return Promise.resolve();
-  // try {
-  //   // return del(filename);
-  // } catch (error) {
-  //   // throw new Error("Error while deleting file ->" + filename);
-  // }
+// delete images from digital ocean space object storage
+export async function deleteFile(filename = "") {
+  try {
+    const s3 = new AWS.S3({
+      endpoint: process.env.DO_SPACES_ENDPOINT,
+      accessKeyId: process.env.DO_SPACES_KEY,
+      secretAccessKey: process.env.DO_SPACES_SECRET,
+    });
+    const params = {
+      Bucket: process.env.DO_SPACES_BUCKET,
+      Key: filename.replace(process.env.DO_SPACES_URL, ""),
+    };
+    const response = await s3.deleteObject(params).promise();
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error while deleting file ->" + filename);
+  }
 }
+
+// upload images using vercel blob
+// export async function uploadFile(file, filename) {
+//   try {
+//     return put(filename, file, {
+//       access: "public",
+//     });
+//   } catch (error) {
+//     throw new Error("Error while uploading file ->" + filename);
+//   }
+// }
+
+// delete images form vercel blob
+// export async function deleteFile(filename) {
+//   try {
+//     return del(filename);
+//   } catch (error) {
+//     return Promise.resolve();
+//     // throw new Error("Error while deleting file ->" + filename);
+//   }
+// }
 
 export async function checkExistence(filter, model) {
   try {

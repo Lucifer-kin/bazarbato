@@ -16,7 +16,7 @@ const DND = (props) => {
   const handleChange = (e) => {
     const image = e.target.files[0];
     setFile(URL.createObjectURL(image));
-    props.onUpload?.(image);
+    props?.onUpload?.(image);
   };
 
   return (

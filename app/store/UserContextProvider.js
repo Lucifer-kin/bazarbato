@@ -6,7 +6,7 @@ import Modal from "@/components/_customer/Modal/Modal";
 import store from "./store";
 
 export default function UserContextProvider({ children, user }) {
-  console.log("inserting user into the store");
+  console.log("Inserting user into the store:");
   store.dispatch({ type: "user/setUser", payload: user });
 
   return (
