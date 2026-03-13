@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { forwardRef } from "react";
 
 import { FaStar, FaStarHalf } from "react-icons/fa";
 
@@ -6,10 +7,10 @@ import styles from "./ProductItem.module.css";
 import shoes from "@/public/images/products/1.jpg";
 import Image from "next/image";
 
-export default function ProductItem({ className, product, ...rest }) {
+const ProductItem = forwardRef(function ProductItem({ className, product, ...rest }, ref) {
   if (!product) return <></>;
   return (
-    <div className={[styles.product, className].join(" ")} {...rest}>
+    <div ref={ref} className={[styles.product, className].join(" ")} {...rest}>
       <Link href={`/product/${product?.url_key}`}>
         <Image src={product?.images[0]} alt="shoes" width={250} height={250} />
         <Image
@@ -38,4 +39,6 @@ export default function ProductItem({ className, product, ...rest }) {
       </Link>
     </div>
   );
-}
+});
+
+export default ProductItem;

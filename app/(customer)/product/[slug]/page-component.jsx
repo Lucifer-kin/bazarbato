@@ -40,7 +40,7 @@ export default function PageComponent({ product, addToBag, applyCoupon }) {
   const user = useSelector((state) => state.user.user);
   const [activeImage, setActiveImage] = useState(product.images[0]);
   const [selectedAttribute, setSelectedAttribute] = useState(
-    getInitialState(product.attributes)
+    getInitialState(product.attributes),
   );
   const [price, setPrice] = useState(product.price);
   const [quantity, setQuantity] = useState(1);
@@ -91,7 +91,7 @@ export default function PageComponent({ product, addToBag, applyCoupon }) {
             message: "Product added to bag.",
             title: "Success",
             status: true,
-          })
+          }),
         );
       }
     } catch (error) {
@@ -263,6 +263,16 @@ export default function PageComponent({ product, addToBag, applyCoupon }) {
               <button>Apply</button>
             </form>
           )}
+          <div className={styles.cta}>
+            <button className={styles.buyNow} onClick={buyNowHandler}>
+              <MdLabelImportant />
+              <span>Buy Now</span>
+            </button>
+            <button className={styles.addToBag} onClick={addToBagHandler}>
+              <BsBagPlusFill />
+              <span>Add to Bag</span>
+            </button>
+          </div>
           <div className={styles.attributes}>
             {product.attributes.length > 0 &&
               product.attributes.map((attribute, index) => (
@@ -291,16 +301,6 @@ export default function PageComponent({ product, addToBag, applyCoupon }) {
                   ))}
                 </div>
               ))}
-          </div>
-          <div className={styles.cta}>
-            <button className={styles.buyNow} onClick={buyNowHandler}>
-              <MdLabelImportant />
-              <span>Buy Now</span>
-            </button>
-            <button className={styles.addToBag} onClick={addToBagHandler}>
-              <BsBagPlusFill />
-              <span>Add to Bag</span>
-            </button>
           </div>
           <div className={styles.description}>
             <p>Description</p>

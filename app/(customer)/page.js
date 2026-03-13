@@ -16,16 +16,41 @@ import Category from "@/components/_customer/Category/Category";
 import Testimonials from "@/components/_customer/Testimonials/Testimonials";
 import ProductContainer from "@/components/_customer/ProductContainer/ProductContainer";
 
-async function getRecommendedProducts() {
+async function getRecommendedProducts(count=12) {
   try {
     await dbConnect();
-    const products = await Product.find({})
-      .limit(12)
-      .select("category name price images url_key")
-      .populate("category", "name code")
-      .lean();
+    const products = await Product.aggregate([
+      // 1. Get 12 random documents
+      { $sample: { size: count } },
+
+      // 2. "Populate" the category (Join the categories collection)
+      {
+        $lookup: {
+          from: "categories", // The actual name of the collection in MongoDB (usually lowercase plural)
+          localField: "category", // The field in Product
+          foreignField: "_id", // The field in Category
+          as: "category", // Output array name
+        },
+      },
+
+      // 3. Convert the category array back to a single object (since $lookup returns an array)
+      { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+
+      // 4. "Select" specific fields (1 = include, 0 = exclude)
+      {
+        $project: {
+          name: 1,
+          price: 1,
+          images: 1,
+          url_key: 1,
+          "category.name": 1,
+          "category.code": 1,
+        },
+      },
+    ]);
     return deepCopy(products);
   } catch (error) {
+    console.log("Error fetching recommended products:", error);
     return [];
   }
 }
@@ -33,11 +58,12 @@ async function getRecommendedProducts() {
 export async function getBestSellerProducts() {
   try {
     await dbConnect();
-    const { products } = await SiteContent.findOne({
-      subject: "BEST_SELLERS",
-    })
-      .populate({ path: "products", select: "name price images url_key" })
-      .lean();
+    // const { products } = await SiteContent.findOne({
+    //   subject: "BEST_SELLERS",
+    // })
+    //   .populate({ path: "products", select: "name price images url_key" })
+    //   .lean();
+    const products = await getRecommendedProducts(5);
 
     // this is a dummy calculation for MRP because I don't have MRP in the database
     const productsWithMrp = products.map((product) => ({
@@ -61,6 +87,8 @@ export async function getFeaturedCategories() {
     })
       .populate("categories", "name code banner")
       .lean();
+    
+    
 
     // Retrieve subcategories for each parent category
     const categoriesWithSubcategories = await CategoryDoc.aggregate([
@@ -174,7 +202,7 @@ export default async function Home() {
     newArrivals,
     topRatedProducts,
   ] = await Promise.all([
-    getRecommendedProducts(),
+    getRecommendedProducts(600),
     getBestSellerProducts(),
     getFeaturedCategories(),
     getDealOfTheDay(),

@@ -1,92 +1,77 @@
+'use client';
+
 import ProductItem from "@/components/_customer/ProductItem/ProductItem";
 import styles from "./page.module.css";
-import dbConnect from "@/helpers/dbConnect";
-import Product from "@/models/Product";
-import { deepCopy } from "@/helpers/utils";
 import Image from "next/image";
 import noResultsFound from "@/public/no-results-found.png";
 import SearchFilter from "./search-filter";
-import Category from "@/models/Category";
+import { useSearchParams } from "next/navigation";
+import { useState, useEffect, useRef, useCallback } from "react";
 
-async function getProducts({
-  min,
-  max,
-  price_sort,
-  query = "",
-  category = "",
-  alphabet_sort,
-}) {
-  query = query?.trim?.();
-  alphabet_sort = +alphabet_sort === 2 ? -1 : 1;
-  price_sort = +price_sort === 2 ? 1 : -1;
-  min = isNaN(min) ? 0 : +min;
-  max = isNaN(max) ? Infinity : +max;
+export default function Search() {
+  const searchParams = useSearchParams();
+  const query = decodeURI(searchParams.get('query') || '').trim();
+  const category = searchParams.get('category') || '';
+  const alphabet_sort = +(searchParams.get('alphabet_sort') || 1);
+  const price_sort = +(searchParams.get('price_sort') || 1);
+  const min = isNaN(searchParams.get('min')) ? 0 : +(searchParams.get('min') || 0);
+  const max = isNaN(searchParams.get('max')) || +(searchParams.get('max') || 0) === 0 ? Infinity : +(searchParams.get('max') || Infinity);
 
-  try {
-    await dbConnect();
-    if (category) {
-      category = await Category.findOne({ code: category })
-        .lean()
-        .select("_id");
-      if (!category) return [];
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const observer = useRef();
+
+  const lastProductRef = useCallback(node => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => prevPage + 1);
+      }
+    });
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore]);
+
+  const fetchProducts = async (pageNum) => {
+    setLoading(true);
+    const params = new URLSearchParams({
+      query,
+      category,
+      alphabet_sort: alphabet_sort.toString(),
+      price_sort: price_sort.toString(),
+      min: min.toString(),
+      max: max === Infinity ? '' : max.toString(),
+      page: pageNum.toString(),
+      limit: '20'
+    });
+    const res = await fetch(`/api/search?${params}`);
+    const data = await res.json();
+    setLoading(false);
+    if (data.products.length < 20) {
+      setHasMore(false);
     }
-    if (!category && query?.length === 0) return [];
+    setProducts(prev => [...prev, ...data.products]);
+  };
 
-    let filter = {
-      $or: [
-        { name: { $regex: query, $options: "i" } },
-        { description: { $regex: query, $options: "i" } },
-        { meta_keywords: { $regex: query, $options: "i" } },
-        { meta_title: { $regex: query, $options: "i" } },
-        { url_key: { $regex: query, $options: "i" } },
-      ],
-      price: { $gte: min, $lte: max },
-    };
-    if (category) {
-      filter = { ...filter, category };
+  useEffect(() => {
+    setProducts([]);
+    setPage(1);
+    setHasMore(true);
+    fetchProducts(1);
+  }, [query, category, alphabet_sort, price_sort, min, max]);
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchProducts(page);
     }
-    const products = await Product.find(filter)
-      .sort({ name: alphabet_sort, price: price_sort })
-      .populate("category", "name")
-      .select("name price images category url_key rating")
-      .limit(6)
-      .lean();
-
-    return deepCopy(products);
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
-
-export default async function Search({
-  searchParams: {
-    query = "",
-    alphabet_sort,
-    price_sort,
-    min,
-    max,
-    category = "",
-  },
-}) {
-  query = decodeURI(query)?.trim?.();
-  alphabet_sort = +alphabet_sort === 2 ? 2 : 1;
-  price_sort = +price_sort === 2 ? 2 : 1;
-  min = isNaN(min) ? 0 : +min;
-  max = isNaN(max) || max == 0 ? Infinity : +max;
-
-  const products = await getProducts({
-    min,
-    max,
-    query,
-    price_sort,
-    alphabet_sort,
-    category,
-  });
+  }, [page]);
 
   const title = category
-    ? `${products?.length} products of ${category}`
-    : `${products?.length} results for '${query}'`;
+    ? `Products of ${category}`
+    : `Results for '${query}'`;
+
   return (
     <section className={styles.section}>
       {products?.length > 0 && <h1 className={styles.heading}>{title}</h1>}
@@ -101,22 +86,26 @@ export default async function Search({
       />
       {products?.length > 0 ? (
         <div className={styles.results}>
-          {products.map((product) => (
+          {products.map((product, index) => (
             <ProductItem
               key={product._id}
               className={styles.product}
               product={product}
+              ref={index === products.length - 1 ? lastProductRef : null}
             />
           ))}
         </div>
       ) : (
-        <div className={styles.noResults}>
-          <h1 className={styles.heading}>
-            {category ? "No products found" : `No results found for '${query}'`}
-          </h1>
-          <Image src={noResultsFound} alt="No results found" />
-        </div>
+        !loading && (
+          <div className={styles.noResults}>
+            <h1 className={styles.heading}>
+              {category ? "No products found" : `No results found for '${query}'`}
+            </h1>
+            <Image src={noResultsFound} alt="No results found" />
+          </div>
+        )
       )}
+      {loading && <div>Loading...</div>}
     </section>
   );
 }
